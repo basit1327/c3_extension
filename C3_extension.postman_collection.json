@@ -1,0 +1,163 @@
+{
+	"info": {
+		"_postman_id": "bcdb1307-db00-47b4-93f7-8b3cfbeb10df",
+		"name": "C3_extension",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login API",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\":\"basit2@mail.com\",\n\t\"password\":\"12345\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3006/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3006",
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Logout",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uSGFzaCI6ImIxNjMxMWEyNTRjZmQ3MjU1YTE0YmU2ZmM1OTAzNDYwIiwiaWF0IjoxNjEwMTAxNDgxfQ.FvEQ-A2oT5ytzCkQE4OpzqryRuERZjT2pLWIXdG_BTg",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3006/api/logout",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3006",
+					"path": [
+						"api",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Signup",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"firstName\":\"aa\",\n\t\"lastName\":\"bb\",\n\t\"email\":\"basit2@mail.com\",\n\t\"password\":\"12345\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3006/auth/signup",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3006",
+					"path": [
+						"auth",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Account",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uSGFzaCI6IjQwMDA4MTIzYjlkNjFhMGRkMjNhMjIyYjRmNDZmYTQyIiwiaWF0IjoxNjEwMTAyMDkzfQ.ueCq-Fn4p-CWyXcH3_dOXEdR7NfmIucH4B6eJOG-aok",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"firstName\":\"Basit\",\n\t\"lastName\":\"R\",\n\t\"password\":\"12345\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3006/api/update",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3006",
+					"path": [
+						"api",
+						"update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Own Account",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uSGFzaCI6ImEzZDAyNTk1ODUzOTc5NDQ4NjEzMzE0OGRjY2ZjMWU5IiwiaWF0IjoxNTgyMDk2MDMxfQ.HW_7HADhLEMYGV_jVsZNhCz-hHdOjfdUzHkuX-YYgbU",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://192.168.10.3:3006/api/delete_own",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"10",
+						"3"
+					],
+					"port": "3006",
+					"path": [
+						"api",
+						"delete_own"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
