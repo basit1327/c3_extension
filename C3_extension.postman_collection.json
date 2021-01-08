@@ -157,6 +157,38 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Get products list",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uSGFzaCI6IjMzYTBkOTk1NjNlMzNmOTcyMmIzZWY2Zjg0Yjg5NzFhIiwiaWF0IjoxNjEwMTAzMTk4fQ.iLdXMJ2zzLUfoVMTZ1X4GckMplrSIYuzhTof7lWIjOE",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3006/api/products?offset=0",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3006",
+					"path": [
+						"api",
+						"products"
+					],
+					"query": [
+						{
+							"key": "offset",
+							"value": "0"
+						}
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"protocolProfileBehavior": {}
