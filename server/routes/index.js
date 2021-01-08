@@ -2,6 +2,7 @@
 
 const auth = require('../services/auth'),
     apiRoute = require('./api'),
+    publicApiController = require('./public'),
     loginRoute = require('../routes/login');
 
 function init(server) {
@@ -29,6 +30,7 @@ function init(server) {
     });
 
     server.use('/api',auth.authenticateSession,apiRoute);
+    server.use('/public',publicApiController);
     server.use('/auth',loginRoute);
 
 }
