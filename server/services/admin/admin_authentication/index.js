@@ -7,7 +7,7 @@ const _ = require('lodash'),
 	{invalidQueryResult,failedToGetDatabaseConnection} = require('../../../../configs/res_codes'),
 	DbConnection = require('../../../dataaccesss/dbconnection').DbConnection;
 
-async function userLogin (req,res){
+async function adminLogin (req,res){
 	let connection;
 	try {
 		let {email,password} = req.body;
@@ -22,7 +22,7 @@ async function userLogin (req,res){
 				id,
 				concat(first_name,' ',last_name) as name,
 				status
-				from accounts
+				from admin_accounts
 				where email = ? AND password = ?`,[email,md5(password)]);
 			if ( _.has(dbRes, '[0].id') ) {
 				if ( dbRes[0].status==0 ){
@@ -37,7 +37,7 @@ async function userLogin (req,res){
 						token:token,
 						name:dbRes[0].name
 					});
-					saveNewUserSession(hash,dbRes[0].id);
+					saveNewAdminSession(hash,dbRes[0].id);
 				}
 			}
 			else {
@@ -58,73 +58,26 @@ async function userLogin (req,res){
 	}
 }
 
-async function userLogOut (req,res){
+async function adminLogOut (req,res){
 	if ( req.sessionId ){
 		res.send({status:200,detail:'logged out successfully'});
-		deleteSession(req.sessionId);
+		deleteAdminSession(req.sessionId);
 	}
 	else {
 		res.send({status:400,detail:'Failed to logout, Authentication header not present'});
 	}
 }
 
-async function userRegister (req,res){
-	let connection;
-	try {
-		let {firstName,lastName,email,password} = req.body;
-		if ( !email || !password || !firstName || !lastName) {
-			res.send({status:400,detail:'Invalid request, you must provide (first name, last name, email, password)'});
-			return;
-		}
-
-		connection = await new DbConnection().getConnection();
-		if ( connection ) {
-			let hash = md5(new Date()+Math.random());
-			let dbRes = await connection.query(`INSERT INTO accounts
-				(hash,first_name,last_name,email,password)
-				VALUES (?,?,?,?,?)`,[
-					hash,
-					firstName,
-					lastName,
-					email,
-					md5(password)
-				]);
-			if ( _.has(dbRes,'insertId') ){
-				res.send({status:200,detail:'Account created successfully'});
-			} else {
-				throw 'something went wrong no insert id in user register'
-			}
-		} else {
-			res.send({status: 400, detail: failedToGetDatabaseConnection.description});
-		}
-	}
-	catch (e) {
-		let e2 = e.toString();
-		if ( e2.includes('Duplicate entry') ){
-			res.send({status: 400, detail: 'This email is already register try another one'});
-		} else {
-			res.send({status: 400, detail: 'something went wrong while signup'});
-			console.log('Exception: ', e);
-		}
-	}
-	finally {
-		if ( connection ) {
-			connection.release();
-		}
-	}
-}
-
-
 
 
 /* Saving and deleting session */
-async function saveNewUserSession(hash,adminId){
+async function saveNewAdminSession(hash,adminId){
 	let connection;
 	try {
 		connection = await new DbConnection().getConnection();
 		if ( connection ) {
 			let dbRes = await connection.query(`INSERT
-			INTO user_sessions (hash,user_id,created_at)
+			INTO admin_sessions (hash,admin_id,created_at)
 			VALUES ('${hash}','${adminId}','${new Date().getTime()}')`);
 			if ( _.has(dbRes, 'insertId') ) {
 				console.log('Session Saved successfully');
@@ -145,13 +98,14 @@ async function saveNewUserSession(hash,adminId){
 	}
 }
 
-async function deleteSession(sessionId){
+async function deleteAdminSession(sessionId){
+	console.log('HEREH');
 	let connection;
 	try {
 		connection = await new DbConnection().getConnection();
 		if ( connection ) {
 			let dbRes = await connection.query(`UPDATE
-			user_sessions SET status = ?
+			admin_sessions SET status = ?
 			WHERE hash=?`,[deletedSessionStatus,sessionId]);
 			if ( _.has(dbRes, 'affectedRows') ) {
 				console.log('Session deleted successfully');
@@ -174,7 +128,6 @@ async function deleteSession(sessionId){
 
 
 module.exports = {
-	userLogin,
-	userLogOut,
-	userRegister
+	adminLogin,
+	adminLogOut
 };

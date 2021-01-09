@@ -3,6 +3,7 @@
 const auth = require('../services/auth'),
     apiRoute = require('./api'),
     publicApiController = require('./public'),
+    adminApiController = require('./admin_api'),
     loginRoute = require('../routes/login');
 
 function init(server) {
@@ -29,8 +30,9 @@ function init(server) {
         res.send('|--- C3 SERVER ---|')
     });
 
-    server.use('/api',auth.authenticateSession,apiRoute);
+    server.use('/api',auth.authenticateUserSession,apiRoute);
     server.use('/public',publicApiController);
+    server.use('/admin',auth.authenticateAdminSession,adminApiController);
     server.use('/auth',loginRoute);
 
 }
