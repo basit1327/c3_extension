@@ -8,5 +8,6 @@ let router = express.Router();
 
 /*Product APIs */
 router.get('/products', productService.getProductsList);
+router.get('/productById', productService.getProductDetail);
 
 module.exports = router;

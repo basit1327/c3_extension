@@ -36,6 +36,37 @@ async function getProductsList(req,res){
 	}
 }
 
+async function getProductDetail(req,res){
+	let connection;
+	let id = Number(req.query.id);
+	try {
+		if(!id){
+			res.send({status:400,detail:'ProductId not provided'})
+			return;
+		}
+		connection = await new DbConnection().getConnection();
+		if ( connection ) {
+			let dbRes = await connection.query(`SELECT * from products where id=? LIMIT 1`,[id]);
+			if ( dbRes.length>0 ){
+				res.send({status:200,detail:`Detail of productId ${id}`,data:dbRes[0]});
+			} else {
+				res.send({status:400,detail:'Oops no record found..'})
+			}
+		} else {
+			res.send({status: 400, detail: failedToGetDatabaseConnection.description});
+		}
+	}
+	catch (e) {
+		res.send({status: 400, detail: 'something went wrong while adding new product'});
+		console.log('Exception: ', e);
+	}
+	finally {
+		if ( connection ) {
+			connection.release();
+		}
+	}
+}
+
 async function addNewProduct(req,res){
 	let connection;
 	let {title,model,price,category,description,image,color} = req.body;
@@ -73,5 +104,6 @@ async function addNewProduct(req,res){
 
 module.exports = {
 	getProductsList,
+	getProductDetail,
 	addNewProduct
 };
