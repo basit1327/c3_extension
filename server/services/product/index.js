@@ -46,8 +46,10 @@ async function addNewProduct(req,res){
 		}
 		connection = await new DbConnection().getConnection();
 		if ( connection ) {
-			let dbRes = await connection.query(`INSERT INTO products (title,model,price,category,description,image,color)
-					VALUES (?,?,?,?,?,?,?);`,[title,model,Number(price),category,description,image,color]);
+			let dbRes = await connection.query(`INSERT INTO products
+					(title,model,price,category,description,image,color)
+					VALUES (?,?,?,?,?,?,?);`,
+				[title,model,Number(price),category,description,image,color]);
 			if ( dbRes.insertId ){
 				res.send({status:200,detail:`Product added successfully`,productId:dbRes.insertId});
 			} else {
