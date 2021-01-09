@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 08, 2021 at 11:37 AM
+-- Generation Time: Jan 09, 2021 at 09:18 AM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.2.33
 
@@ -48,6 +48,80 @@ INSERT INTO `accounts` (`id`, `hash`, `first_name`, `last_name`, `email`, `passw
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `admin_accounts`
+--
+
+CREATE TABLE `admin_accounts` (
+  `id` int(11) NOT NULL,
+  `hash` varchar(45) NOT NULL,
+  `first_name` varchar(45) DEFAULT NULL,
+  `last_name` varchar(45) DEFAULT NULL,
+  `email` varchar(45) NOT NULL,
+  `password` varchar(45) DEFAULT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `admin_accounts`
+--
+
+INSERT INTO `admin_accounts` (`id`, `hash`, `first_name`, `last_name`, `email`, `password`, `status`) VALUES
+(1, '63d15926e036a863629ccdb5ade0ca95', 'Basit', 'Raza', 'basit@mail.com', '827ccb0eea8a706c4c34a16891f84e7b', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `admin_sessions`
+--
+
+CREATE TABLE `admin_sessions` (
+  `id` int(11) NOT NULL,
+  `hash` varchar(45) NOT NULL,
+  `admin_id` int(10) UNSIGNED DEFAULT NULL,
+  `created_at` varchar(10) DEFAULT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `admin_sessions`
+--
+
+INSERT INTO `admin_sessions` (`id`, `hash`, `admin_id`, `created_at`, `status`) VALUES
+(1, '94a76cf752f46cf09338b7bbaea64358', 1, '1610177404', 1),
+(2, 'e2e625956737723dc3dfac0ef387f478', 1, '1610177592', 1),
+(3, '2e03623899ecfeaf25a9fce7c1910d30', 1, '1610177649', 1),
+(4, '0f6a87011cd14840044142a5a6aa89bb', 1, '1610177995', 0),
+(5, '8f9e71245579fd6bc3c052357560a746', 1, '1610179025', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `products`
+--
+
+CREATE TABLE `products` (
+  `id` int(11) NOT NULL,
+  `title` varchar(50) NOT NULL,
+  `model` varchar(20) NOT NULL,
+  `price` double NOT NULL,
+  `category` varchar(20) NOT NULL,
+  `description` varchar(250) NOT NULL,
+  `image` varchar(200) NOT NULL,
+  `color` varchar(10) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `products`
+--
+
+INSERT INTO `products` (`id`, `title`, `model`, `price`, `category`, `description`, `image`, `color`, `status`) VALUES
+(1, 'Engineering Calculator', 'SM-1000', 109.96, 'Professional', 'Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content.', '', 'Gray', 1),
+(3, 'Engineering Calculator 2', 'SM-1000 2', 109.96, 'Professional', 'Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content.', 'https://assets.justinmind.com/wp-content/webp-express/webp-images/uploads/2018/11/Lorem-Ipsum-alternatives.png.webp', 'Blue', 1);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `user_sessions`
 --
 
@@ -70,7 +144,8 @@ INSERT INTO `user_sessions` (`id`, `hash`, `user_id`, `created_at`, `status`) VA
 (9, 'adffac8df2cfca100f838f11d2f3e580', 4, '1610101360331', 1),
 (10, 'b16311a254cfd7255a14be6fc5903460', 9, '1610101481944', 0),
 (11, '40008123b9d61a0dd23a222b4f46fa42', 9, '1610102093648', 1),
-(12, 'defe6c3ecea4cbd5d2cd5ab35950aee7', 9, '1610102120896', 1);
+(12, 'defe6c3ecea4cbd5d2cd5ab35950aee7', 9, '1610102120896', 1),
+(13, '33a0d99563e33f9722b3ef6f84b8971a', 9, '1610103198795', 1);
 
 --
 -- Indexes for dumped tables
@@ -82,6 +157,24 @@ INSERT INTO `user_sessions` (`id`, `hash`, `user_id`, `created_at`, `status`) VA
 ALTER TABLE `accounts`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `email` (`email`);
+
+--
+-- Indexes for table `admin_accounts`
+--
+ALTER TABLE `admin_accounts`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `admin_sessions`
+--
+ALTER TABLE `admin_sessions`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `products`
+--
+ALTER TABLE `products`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `user_sessions`
@@ -102,10 +195,28 @@ ALTER TABLE `accounts`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
+-- AUTO_INCREMENT for table `admin_accounts`
+--
+ALTER TABLE `admin_accounts`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `admin_sessions`
+--
+ALTER TABLE `admin_sessions`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `products`
+--
+ALTER TABLE `products`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `user_sessions`
 --
 ALTER TABLE `user_sessions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- Constraints for dumped tables
