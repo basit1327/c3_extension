@@ -68,6 +68,49 @@ async function adminLogOut (req,res){
 	}
 }
 
+async function updateAccount (req,res){
+	let connection;
+	try {
+		let {firstName,lastName,password} = req.body;
+		if ( !password && !firstName && !lastName ) {
+			res.send({status:400,detail:'Invalid request, you must provide at least one to update (first name, last name, password)'});
+			return;
+		}
+		
+		connection = await new DbConnection().getConnection();
+		if ( connection ) {
+			
+			let updateQuerySub = '';
+			let updateQueryParam = [];
+			if ( firstName ){updateQuerySub+= ' first_name=? , '; updateQueryParam.push(firstName)}
+			if ( lastName ){updateQuerySub+= ' last_name=? , '; updateQueryParam.push(lastName)}
+			if ( password ){updateQuerySub+= ' password=? , '; updateQueryParam.push(md5(password))}
+			
+			// removing comma from last
+			updateQuerySub = updateQuerySub.substr(0,updateQuerySub.length-2);
+			
+			
+			let dbRes = await connection.query(`UPDATE admin_accounts SET ${updateQuerySub}
+			WHERE id = ?`,[...updateQueryParam,req.userId]);
+			if ( _.has(dbRes,'affectedRows') ){
+				res.send({status:200,detail:'Account details updated'});
+			} else {
+				throw 'something went wrong while updating user details'
+			}
+		} else {
+			res.send({status: 400, detail: failedToGetDatabaseConnection.description});
+		}
+	}
+	catch (e) {
+		res.send({status: 400, detail: 'something went wrong while trying to update details'});
+		console.log('Exception: ', e);
+	}
+	finally {
+		if ( connection ) {
+			connection.release();
+		}
+	}
+}
 
 
 /* Saving and deleting session */
@@ -99,7 +142,6 @@ async function saveNewAdminSession(hash,adminId){
 }
 
 async function deleteAdminSession(sessionId){
-	console.log('HEREH');
 	let connection;
 	try {
 		connection = await new DbConnection().getConnection();
@@ -129,5 +171,6 @@ async function deleteAdminSession(sessionId){
 
 module.exports = {
 	adminLogin,
-	adminLogOut
+	adminLogOut,
+	updateAccount
 };

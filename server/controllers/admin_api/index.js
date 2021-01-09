@@ -9,6 +9,7 @@ let router = express.Router();
 
 /*Auth APIs*/
 router.get('/logout', adminAuthService.adminLogOut);
+router.post('/update_account', adminAuthService.updateAccount);
 router.post('/addNewProduct', productService.addNewProduct);
 
 
