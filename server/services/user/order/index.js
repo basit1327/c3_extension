@@ -72,6 +72,102 @@ async function createOrder(req,res){
 	}
 }
 
+async function getOrderById(req,res){
+	let connection;
+	try {
+		let id = Number(req.query.id);
+		if ( !id ) {
+			res.send({status:400,detail:'Invalid request'});
+			return;
+		}
+		
+		connection = await new DbConnection().getConnection();
+		if ( connection ) {
+			let orderDetail = await connection.query(`SELECT * FROM orders WHERE orders.id=? AND orders.user_id=? LIMIT 1`,[id,req.userId]);
+			if ( _.has(orderDetail,'[0].id') ){
+				let orderItems = await connection.query(`
+					SELECT order_items.*,
+					products.title, products.model, products.price,products.category,products.image
+					FROM order_items
+					INNER JOIN products
+					ON order_items.product_id = products.id
+					WHERE order_id=?`,[orderDetail[0].id]);
+				res.send({
+					status:200,
+					detail:'Order Details',
+					data:{
+						created_at:orderDetail[0].created_at,
+						total_amount:orderDetail[0].total_amount,
+						order_id:orderDetail[0].id,
+						status:orderDetail[0].status,
+						items:orderItems
+					}
+				});
+			} else {
+				throw 'something went wrong while updating user details'
+			}
+		} else {
+			res.send({status: 400, detail: failedToGetDatabaseConnection.description});
+		}
+	}
+	catch (e) {
+		res.send({status: 400, detail: 'something went wrong while getting order details'});
+		console.log('Exception: ', e);
+	}
+	finally {
+		if ( connection ) {
+			connection.release();
+		}
+	}
+}
+
+async function getAllOrders(req,res){
+	let connection;
+	try {
+		connection = await new DbConnection().getConnection();
+		if ( connection ) {
+			let ordersList = await connection.query(`SELECT * FROM orders WHERE orders.user_id=?`,[req.userId]);
+			let data = [];
+			for(let i=0;i<ordersList.length;i++){
+				let orderItems = await connection.query(`
+					SELECT order_items.*,
+					products.title, products.model, products.price,products.category,products.image
+					FROM order_items
+					INNER JOIN products
+					ON order_items.product_id = products.id
+					WHERE order_id=?`,[ordersList[0].id]);
+				data.push({
+					created_at:ordersList[i].created_at,
+					total_amount:ordersList[i].total_amount,
+					order_id:ordersList[i].id,
+					status:ordersList[i].status,
+					items:orderItems
+				})
+			}
+			if(data.length>0){
+				res.send({status:200,detail:"All of your recent orders",data})
+			}
+			else{
+				res.send({status:200,detail:"You've no order yet",data})
+			}
+		} else {
+			res.send({status: 400, detail: failedToGetDatabaseConnection.description});
+		}
+	}
+	catch (e) {
+		res.send({status: 400, detail: 'something went wrong while getting order details'});
+		console.log('Exception: ', e);
+	}
+	finally {
+		if ( connection ) {
+			connection.release();
+		}
+	}
+}
+
+
 module.exports = {
-	createOrder
+	createOrder,
+	getOrderById,
+	getAllOrders
 };

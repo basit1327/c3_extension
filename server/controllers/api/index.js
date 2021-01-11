@@ -13,6 +13,8 @@ router.get('/logout', userAuthService.userLogOut);
 router.post('/update', userProfileService.updateAccount);
 router.get('/delete_own', userProfileService.deleteOwnAccount);
 router.post('/create_order', orderService.createOrder);
+router.get('/get_order_detail', orderService.getOrderById);
+router.get('/get_all_orders', orderService.getAllOrders);
 
 
 module.exports = router;
