@@ -9,15 +9,11 @@ const _ = require('lodash'),
 	{invalidQueryResult,failedToGetDatabaseConnection} = require('../../../../configs/res_codes'),
 	DbConnection = require('../../../dataaccesss/dbconnection').DbConnection;
 
-let orderItems = [
-	{productId:1,quantity:1},
-	{productId:3,quantity:3}
-]
-
 
 async function createOrder(req,res){
 	let connection;
 	try{
+		let orderItems = req.body.order;
 		
 		let insertOrderItems = async (orderId,productId,quantity)=>{
 			let orderItemInsert = await connection.query(`INSERT INTO order_items (order_id,product_id,quantity) VALUES (?,?,?)`,[orderId,productId,quantity]);
