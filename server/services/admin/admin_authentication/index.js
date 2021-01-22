@@ -10,7 +10,7 @@ const _ = require('lodash'),
 async function adminLogin (req,res){
 	let connection;
 	try {
-		let {email,password} = req.body;
+		let {email,password} = req.query;
 		if ( !email || !password ) {
 			res.send({status:400,detail:'Invalid email or password'});
 			return;
