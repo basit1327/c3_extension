@@ -57,7 +57,7 @@ async function getProductDetail(req,res){
 		}
 	}
 	catch (e) {
-		res.send({status: 400, detail: 'something went wrong while adding new product'});
+		res.send({status: 400, detail: 'something went wrong while getting product detail'});
 		console.log('Exception: ', e);
 	}
 	finally {
