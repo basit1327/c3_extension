@@ -14,10 +14,20 @@ async function createOrder(req,res){
 	let connection;
 	try{
 		let orderItems = req.body.order;
+		let {address,phone,country,city,zip} = req.body;
+		if(!orderItems || !address || !phone || !country || !city || !zip){
+			res.send({status:400,detail:'Incomplete order details, Must provide order items, address,phone,country,city,zip'})
+			return;
+		}
 		
 		let insertOrderItems = async (orderId,productId,quantity)=>{
 			let orderItemInsert = await connection.query(`INSERT INTO order_items (order_id,product_id,quantity) VALUES (?,?,?)`,[orderId,productId,quantity]);
 			return _.has(orderItemInsert,'insertId');
+		}
+		
+		let insertOrderAddress = async (orderId)=>{
+			let addressInsert = await connection.query(`INSERT INTO order_address (order_id,address,phone,country,city,zip) VALUES (?,?,?,?,?,?)`,[orderId,address,phone,country,city,zip]);
+			return _.has(addressInsert,'insertId');
 		}
 		
 		connection = await new DbConnection().getConnection();
@@ -43,6 +53,12 @@ async function createOrder(req,res){
 				let orderInsert = await connection.query(`INSERT INTO orders (user_id,created_at,total_amount) VALUES (?,?,?)`,[req.userId,new Date().getTime(),orderTotal]);
 				if ( _.has(orderInsert,'insertId') ){
 					orderId = orderInsert.insertId;
+					let orderAddressInserted = await insertOrderAddress(orderId);
+					if(!orderAddressInserted){
+						await connection.query(`ROLLBACK`);
+						throw 'something went wrong no insert id in order-address insert'
+					}
+					
 					for(let i=0;i<orderItems.length;i++){
 						let orderItemInserted = insertOrderItems(orderId,orderItems[i].productId,orderItems[i].quantity);
 						if(!orderItemInserted){
@@ -85,6 +101,10 @@ async function getOrderById(req,res){
 		if ( connection ) {
 			let orderDetail = await connection.query(`SELECT * FROM orders WHERE orders.id=? AND orders.user_id=? LIMIT 1`,[id,req.userId]);
 			if ( _.has(orderDetail,'[0].id') ){
+				let orderAddress = await connection.query(`
+					SELECT * FROM order_address
+					WHERE order_id=?`,[orderDetail[0].id]);
+				
 				let orderItems = await connection.query(`
 					SELECT order_items.*,
 					products.title, products.model, products.price,products.category,products.image
@@ -100,7 +120,8 @@ async function getOrderById(req,res){
 						total_amount:orderDetail[0].total_amount,
 						order_id:orderDetail[0].id,
 						status:orderDetail[0].status,
-						items:orderItems
+						items:orderItems,
+						shipping_info:orderAddress[0]
 					}
 				});
 			} else {
@@ -129,19 +150,25 @@ async function getAllOrders(req,res){
 			let ordersList = await connection.query(`SELECT * FROM orders WHERE orders.user_id=?`,[req.userId]);
 			let data = [];
 			for(let i=0;i<ordersList.length;i++){
+				let orderAddress = await connection.query(`
+					SELECT * FROM order_address
+					WHERE order_id=?`,[ordersList[i].id]);
+				
 				let orderItems = await connection.query(`
 					SELECT order_items.*,
 					products.title, products.model, products.price,products.category,products.image
 					FROM order_items
 					INNER JOIN products
 					ON order_items.product_id = products.id
-					WHERE order_id=?`,[ordersList[0].id]);
+					WHERE order_id=?`,[ordersList[i].id]);
+				
 				data.push({
 					created_at:ordersList[i].created_at,
 					total_amount:ordersList[i].total_amount,
 					order_id:ordersList[i].id,
 					status:ordersList[i].status,
-					items:orderItems
+					items:orderItems,
+					shipping_info:orderAddress[0]
 				})
 			}
 			if(data.length>0){
