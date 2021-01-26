@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 09, 2021 at 09:18 AM
+-- Generation Time: Jan 26, 2021 at 08:12 AM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.2.33
 
@@ -66,7 +66,7 @@ CREATE TABLE `admin_accounts` (
 --
 
 INSERT INTO `admin_accounts` (`id`, `hash`, `first_name`, `last_name`, `email`, `password`, `status`) VALUES
-(1, '63d15926e036a863629ccdb5ade0ca95', 'Basit', 'Raza', 'basit@mail.com', '827ccb0eea8a706c4c34a16891f84e7b', 1);
+(1, '63d15926e036a863629ccdb5ade0ca95', 'Basit', 'R', 'basit@mail.com', '827ccb0eea8a706c4c34a16891f84e7b', 1);
 
 -- --------------------------------------------------------
 
@@ -91,7 +91,57 @@ INSERT INTO `admin_sessions` (`id`, `hash`, `admin_id`, `created_at`, `status`) 
 (2, 'e2e625956737723dc3dfac0ef387f478', 1, '1610177592', 1),
 (3, '2e03623899ecfeaf25a9fce7c1910d30', 1, '1610177649', 1),
 (4, '0f6a87011cd14840044142a5a6aa89bb', 1, '1610177995', 0),
-(5, '8f9e71245579fd6bc3c052357560a746', 1, '1610179025', 1);
+(5, '8f9e71245579fd6bc3c052357560a746', 1, '1610179025', 1),
+(6, '0523b2a88bf7016071950ee347c93534', 1, '1610182499', 1),
+(7, '439fd3dea096f40f40e8fe8b3b748e07', 1, '1611289173', 1),
+(8, 'e76c104cb1e7a6c925a7b17904f8ae49', 1, '1611289473', 1),
+(9, '8aa3cd7a7f6066f9a72e66af088b1d38', 1, '1611311655', 1),
+(10, '02de8b8f4cd91a978b0b066fc0b41a48', 1, '1611643631', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `orders`
+--
+
+CREATE TABLE `orders` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `created_at` varchar(15) NOT NULL,
+  `total_amount` double NOT NULL DEFAULT 1,
+  `status` tinyint(1) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`id`, `user_id`, `created_at`, `total_amount`, `status`) VALUES
+(7, 9, '1610353703399', 219.92, 1),
+(8, 9, '1610353858485', 219.92, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `order_items`
+--
+
+CREATE TABLE `order_items` (
+  `id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `order_id` varchar(45) DEFAULT NULL,
+  `quantity` int(10) UNSIGNED NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `order_items`
+--
+
+INSERT INTO `order_items` (`id`, `product_id`, `order_id`, `quantity`) VALUES
+(1, 1, '7', 1),
+(2, 3, '7', 3),
+(3, 1, '8', 1),
+(4, 3, '8', 3);
 
 -- --------------------------------------------------------
 
@@ -122,6 +172,28 @@ INSERT INTO `products` (`id`, `title`, `model`, `price`, `category`, `descriptio
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `tutorials`
+--
+
+CREATE TABLE `tutorials` (
+  `id` int(11) NOT NULL,
+  `title` varchar(100) DEFAULT NULL,
+  `link` varchar(100) DEFAULT NULL,
+  `description` text DEFAULT NULL,
+  `category` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` varchar(15) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tutorials`
+--
+
+INSERT INTO `tutorials` (`id`, `title`, `link`, `description`, `category`, `created_at`) VALUES
+(1, 'abcd', 'https://youtube.com', 'lorem ipsum updated', 1, '1611643844770');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `user_sessions`
 --
 
@@ -145,7 +217,13 @@ INSERT INTO `user_sessions` (`id`, `hash`, `user_id`, `created_at`, `status`) VA
 (10, 'b16311a254cfd7255a14be6fc5903460', 9, '1610101481944', 0),
 (11, '40008123b9d61a0dd23a222b4f46fa42', 9, '1610102093648', 1),
 (12, 'defe6c3ecea4cbd5d2cd5ab35950aee7', 9, '1610102120896', 1),
-(13, '33a0d99563e33f9722b3ef6f84b8971a', 9, '1610103198795', 1);
+(13, '33a0d99563e33f9722b3ef6f84b8971a', 9, '1610103198795', 1),
+(14, 'e4aa7939fd67ba2508757ed1d15569e5', 9, '1610351995986', 1),
+(15, '9b0a51097cc3c4b4055683584dc63cb9', 9, '1610358879323', 1),
+(16, '92a3866c9af5cb09d46eea82798733d1', 9, '1610358952713', 1),
+(17, '0cc01cee944417e27931840bf442ae49', 9, '1610358970355', 1),
+(18, '30c98d55a5f59b861dc690d917e55f39', 9, '1610359069674', 0),
+(19, '4bc3ffd593fd3bb553cdaea080bf3b1c', 9, '1610359116722', 1);
 
 --
 -- Indexes for dumped tables
@@ -171,9 +249,27 @@ ALTER TABLE `admin_sessions`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `orders`
+--
+ALTER TABLE `orders`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `order_items`
+--
+ALTER TABLE `order_items`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `products`
 --
 ALTER TABLE `products`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `tutorials`
+--
+ALTER TABLE `tutorials`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -204,7 +300,19 @@ ALTER TABLE `admin_accounts`
 -- AUTO_INCREMENT for table `admin_sessions`
 --
 ALTER TABLE `admin_sessions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `orders`
+--
+ALTER TABLE `orders`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `order_items`
+--
+ALTER TABLE `order_items`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `products`
@@ -213,10 +321,16 @@ ALTER TABLE `products`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
+-- AUTO_INCREMENT for table `tutorials`
+--
+ALTER TABLE `tutorials`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `user_sessions`
 --
 ALTER TABLE `user_sessions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- Constraints for dumped tables
