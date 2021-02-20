@@ -27,7 +27,10 @@ function init(server) {
     });
 
     server.get('/', function (req, res) {
-        res.send('|--- C3 SERVER ---|')
+        res.send('<center>' +
+            '<div style="text-align: center; font-family: sans-serif; color: #777; font-size: 30px">Server is Listning</div>'+
+            '<img src="https://cdn.dribbble.com/users/563824/screenshots/3633228/untitled-5.gif">' +
+            '</center>')
     });
 
     server.use('/api',auth.authenticateUserSession,apiRoute);
