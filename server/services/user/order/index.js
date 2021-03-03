@@ -13,9 +13,9 @@ const _ = require('lodash'),
 async function createOrder(req,res){
 	let connection;
 	try{
-		let {orderItems,address,phone,country,city,zip} = req.body;
-		if(!orderItems || !address || !phone || !country || !city || !zip){
-			console.log('HERE');
+		let orderItems = req.body.order;
+		let {address, phone, email, country, city, zip} = req.body;
+		if(!orderItems || !address || !phone || !email || !country || !city || !zip){
 			res.send({status:400,detail:'Incomplete order details, Must provide order items, address,phone,country,city,zip'})
 			return;
 		}
@@ -26,7 +26,7 @@ async function createOrder(req,res){
 		}
 		
 		let insertOrderAddress = async (orderId)=>{
-			let addressInsert = await connection.query(`INSERT INTO order_address (order_id,address,phone,country,city,zip) VALUES (?,?,?,?,?,?)`,[orderId,address,phone,country,city,zip]);
+			let addressInsert = await connection.query(`INSERT INTO order_address (order_id,address,phone,email,country,city,zip) VALUES (?,?,?,?,?,?,?)`,[orderId,address,phone,email,country,city,zip]);
 			return _.has(addressInsert,'insertId');
 		}
 		
