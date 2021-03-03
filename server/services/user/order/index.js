@@ -13,8 +13,7 @@ const _ = require('lodash'),
 async function createOrder(req,res){
 	let connection;
 	try{
-		let orderItems = req.body.order;
-		let {address, phone, email, country, city, zip} = req.body;
+		let {orderItems, address, phone, email, country, city, zip} = req.body;
 		if(!orderItems || !address || !phone || !email || !country || !city || !zip){
 			res.send({status:400,detail:'Incomplete order details, Must provide order items, address,phone,country,city,zip'})
 			return;
