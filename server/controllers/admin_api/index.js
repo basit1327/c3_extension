@@ -4,6 +4,7 @@ const
 	express = require('express'),
 	adminAuthService = require('../../services/admin/admin_authentication'),
 	productService = require('../../services/product'),
+	orderService = require('../../services/order'),
 	tutorialService = require('../../services/tutorial');
 
 let router = express.Router();
@@ -11,7 +12,11 @@ let router = express.Router();
 /*Auth APIs*/
 router.get('/logout', adminAuthService.adminLogOut);
 router.post('/update_account', adminAuthService.updateAccount);
+
+router.post('/get-all-order', orderService.getOrdersList);
+
 router.post('/add_new_product', productService.addNewProduct);
+
 router.post('/add_new_tutorial', tutorialService.addNewTutorial);
 router.post('/update_tutorial', tutorialService.updateTutorialDetail);
 router.get('/delete_tutorial', tutorialService.deleteTutorialById);
